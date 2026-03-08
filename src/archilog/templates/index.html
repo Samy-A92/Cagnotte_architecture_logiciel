@@ -1,0 +1,64 @@
+<!doctype html>
+
+<title>Hello from Flask</title>
+<body>
+<a href="{{ url_for('web_ui.create_page') }}" class="creez" >creez votre cagnotte</a>
+{% with messages = get_flashed_messages() %}
+  {% if messages %}
+    {% for message in messages %}
+      <div style="background: gray">
+          <h1 style="color: blue">{{ message }}</h1>
+      </div>
+    {% endfor %}
+  {% endif %}
+{% endwith %}
+<table>
+    <tr>
+        <th>Nom</th>
+        <th>date de création</th>
+        <th>montant</th>
+
+        <th>&nbsp;</th>
+    </tr>
+    {% for cagnotte in cagnottes %}
+        <tr>
+            <td><strong>{{ cagnotte[0] }}</strong></td>
+            <td>{{ cagnotte[1] | format_date }}</td>
+            <td>{{ cagnotte[2] }} €</td>
+
+            <td><form action="{{ url_for('web_ui.supprimer_cagnotte') }}" method="POST">
+                <input type="hidden" name="nom" value="{{ cagnotte[0] }}">
+        <button type="submit" style="background:red; color:white;">
+            Supprimer
+        </button>
+    </form></td>
+            <td><form action="{{ url_for('web_ui.plus_info') }}" method="POST">
+                <input type="hidden" name="nom" value="{{ cagnotte[0] }}">
+        <button type="submit" style="background:green; color:white;">
+            Plus d'info...
+        </button>
+    </form></td>
+        </tr>
+        {% else %}
+        <tr>
+            <td colspan="3">Aucune cagnotte pour le moment.</td>
+        </tr>
+        {% endfor %}
+</table>
+</body>
+
+<style>
+    table, th,td {
+        margin-top: 10px;
+        border: black 1px solid;
+        border-collapse: collapse;
+    }
+    .creez {
+        font-size: 20px;
+
+        text-decoration: none;
+        border: black 2px solid;
+        border-radius: 10px;
+    }
+
+</style>

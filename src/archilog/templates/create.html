@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Crée cagnotte</title>
+</head>
+<body>
+<fieldset>
+    <legend>Crez votre cagnotte :</legend>
+    <form action="/actions/cagnottes/create" method="post">
+        <label for="name">Nom:</label>
+        <input type="text" name="name" id="name" minlength="0">
+        <button type="submit">Valider</button>
+        </form>
+    </fieldset>
+    <br>
+    <a href="{{ url_for('web_ui.index') }}">Retour à l'accueil</a>
+</body>
+</html>

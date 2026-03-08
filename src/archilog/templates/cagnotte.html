@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ cagnotte["cagnotte"][0][0] }}</title>
+</head>
+<body>
+
+{% with messages = get_flashed_messages() %}
+  {% if messages %}
+    {% for message in messages %}
+      <div style="background: gray">
+          <h1 style="color: blue">{{ message }}</h1>
+      </div>
+    {% endfor %}
+  {% endif %}
+{% endwith %}
+<h1>Nom: {{cagnotte["cagnotte"][0][0]}}</h1>
+<p>Crée le {{cagnotte["cagnotte"][0][1] | format_date}}, avec {{ cagnotte["membres"][0]|length }} membres, et {{ cagnotte["depenses"][0]|length }} depenses pour un montant total de {{cagnotte["cagnotte"][0][2]}}€.</p>
+
+<form action="{{ url_for('web_ui.form_ajouter_membres') }}" method="POST">
+                <input type="hidden" name="nom" value="{{ cagnotte['cagnotte'][0][0] }}">
+
+        <button type="submit" style="background:green; color:white; margin-bottom: 10px;">
+            Ajouter un membre
+        </button>
+    </form>
+{% if cagnotte["membres"][0]|length > 0 %}
+
+<form action="{{ url_for('web_ui.ajouter_depense_form') }}" method="POST">
+                <input type="hidden" name="nom" value="{{ cagnotte['cagnotte'][0][0] }}">
+
+        <button type="submit" style="background:green; color:white;">
+            Ajouter une depense
+        </button>
+    </form>
+<table>
+    <caption>Membres : </caption>
+    <tr>
+        <th>
+            N°
+        </th>
+        <th>
+            Nom
+        </th>
+        <th>
+            Nombre de depenses
+        </th>
+
+
+    </tr>
+    {% for membre in cagnotte["membres"] %}
+
+    <tr>
+        <td>{{ loop.index }}</td>
+        <td>{{ membre.nom }}</td>
+        <td>{{ membre.nb_depenses }}</td>
+        <td>
+            <form action="{{ url_for('web_ui.supprimer_membre') }}" method="POST">
+                <input type="hidden" name="membre" value="{{ membre.nom }}">
+                <input type="hidden" name="cagnotte" value="{{ cagnotte['cagnotte'][0][0] }}">
+
+                <button type="submit" style="background:red; color:white;">
+                    Supprimer
+                </button>
+            </form>
+        </td>
+    </tr>
+
+    {% endfor %}
+
+</table>
+{% endif %}
+{% if cagnotte["depenses"][0]|length > 0 %}
+<table>
+
+    <caption>Depenses : </caption>
+    <tr>
+        <th>Dépensier</th>
+        <th>Nom de la depense</th>
+        <th>Date</th>
+        <th>Montant</th>
+    </tr>
+    {% for depenses in cagnotte["depenses"] %}
+    <tr>
+    <td>
+        {{depenses[2]}}
+    </td>
+        <td>
+        {% if depenses[3]|length > 0 %}
+            {{depenses[3]}}
+            {% else %}
+            Aucun nom renseigné
+            {% endif %}
+    </td>
+        <td>
+        {{depenses[4] | format_date}}
+    </td>
+        <td>
+        {{depenses[5]}} €
+    </td>
+        <td>
+
+            <form action="{{ url_for('web_ui.supprimer_depense') }}" method="POST">
+                <input type="hidden" name="nom" value='{{ cagnotte["cagnotte"][0][0] }}'>
+                <input type="hidden" name="depense_id" value='{{  depenses[0] }}'>
+        <button type="submit" style="background:red; color:white;">
+            Supprimer
+        </button>
+    </form></td>
+
+
+    </tr>
+
+    {% endfor %}
+</table>
+
+<table>
+    <caption>Remboursements: </caption>
+    <tr>
+        <th>Nom</th>
+        <th>Dépense</th>
+        <th>Balance</th>
+    </tr>
+    {% for membre in bilan['bilan'] %}
+    <tr>
+        <td>{{ membre['nom'] }}</td>
+        <td>{{ membre['paye'] }}</td>
+        {% if membre['diff'] > 0 %}
+        <td style="color: green"> {{membre['diff']}}€ </td>
+        {% else %}
+
+        <td style="color: red" > {{membre['diff']}}€ </td>
+        {% endif %}
+    </tr>
+    {% endfor %}
+</table>
+
+{% endif %}
+</body>
+</html>
+<style>
+    table {
+        margin-top: 20px ;
+        border-collapse: collapse;
+    }
+    th, td {
+        border: 1px solid black;
+        padding: 8px;
+        text-align: left;
+    }
+    caption {
+        font-size: 20px;
+        font-weight: bold;
+
+    }
+</style>

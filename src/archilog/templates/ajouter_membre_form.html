@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Ajouter des membres</title>
+</head>
+<body>
+    <h1>Ajouter des membres à la cagnotte : {{ cagnotte_name }}</h1>
+
+    <form action="{{ url_for('web_ui.action_ajouter_membres') }}" method="POST">
+        <input type="hidden" name="cagnotte" value="{{ cagnotte_name }}">
+
+        <div id="les_noms">
+            <p><input type="text" name="noms_membres" placeholder="Nom du membre" required></p>
+        </div>
+
+        <button type="button" onclick="addInput()">+ Ajouter un autre nom</button>
+        <br><br>
+        <button type="submit">Valider l'ajout</button>
+        <a href="{{ url_for('web_ui.index') }}">Annuler</a>
+    </form>
+
+    <script>
+        function addInput() {
+            const container = document.getElementById('les_noms');
+            const p = document.createElement('p');
+            p.innerHTML = '<input type="text" name="noms_membres" placeholder="Nom du membre" required>';
+            container.appendChild(p);
+        }
+    </script>
+</body>
+</html>

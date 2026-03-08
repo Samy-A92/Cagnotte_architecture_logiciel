@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Ajout d'une depense</title>
+</head>
+<body>
+    <h1>Ajouter une nouvelle dépense sur {{cagnotte["cagnotte"][0][0]}} </h1>
+    <form method="post" action="{{ url_for('web_ui.ajouter_depense') }}">
+        <label for="membre">Nom du membre :</label>
+        <select name="membre" id="membre" required>
+            {% for membre in cagnotte["membres"] %}
+            <option value="{{ membre.nom }}">{{ membre.nom }}</option>
+            {% endfor %}
+        </select><br>
+        <label for="montant">Montant:</label>
+        <input type="number" id="montant" name="montant" step="0.01" min="0.01" required><br>
+        <input type="text" id="description" name="description" placeholder="Nom (optionnel)"><br>
+        <input type="hidden" id="cagnotte" name="cagnotte" value='{{cagnotte["cagnotte"][0][0]}}'>
+        <input type="submit" value="Ajouter">
+    </form>
+</body>
+</html>
